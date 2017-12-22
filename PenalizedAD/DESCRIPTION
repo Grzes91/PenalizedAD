@@ -1,0 +1,22 @@
+Package: PenalizedAD
+Type: Package
+Title: Penalized method for anomaly detection
+Version: 0.1.0
+Date: 22.12.2017
+Author: AMVA4NewPhysics Authors
+Maintainer: Grzegorz Kotkowski <grzegorzmichal.kotkowski@studenti.unipd.it>
+Description: The package provides the implementation of the penalized approach for model-based clustering (MAES) and anomaly detection (PAD) introduced in the referenced document.
+    It contains synthetic data examples used in simulations to test the algorithm.
+License: GPL-3
+References:  Working paper on a Statistical Learning method for Model-Independent searches for New Physics - AMVA4NewPhysics ITN
+Encoding: UTF-8
+LazyData: false
+RoxygenNote: 6.0.1
+Imports: 
+    mvtnorm,
+    mclust,
+    utils,
+    stats
+Suggests: knitr,
+    rmarkdown
+VignetteBuilder: knitr

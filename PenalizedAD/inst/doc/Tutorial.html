@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="AMVA4NewPhysics authors" />
+
+<meta name="date" content="2017-12-22" />
+
+<title>Tutorial for the implemented penalized approach for anomaly detection</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+div.sourceCode { overflow-x: auto; }
+table.sourceCode, tr.sourceCode, td.lineNumbers, td.sourceCode {
+  margin: 0; padding: 0; vertical-align: baseline; border: none; }
+table.sourceCode { width: 100%; line-height: 100%; }
+td.lineNumbers { text-align: right; padding-right: 4px; padding-left: 4px; color: #aaaaaa; border-right: 1px solid #aaaaaa; }
+td.sourceCode { padding-left: 5px; }
+code > span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code > span.dt { color: #902000; } /* DataType */
+code > span.dv { color: #40a070; } /* DecVal */
+code > span.bn { color: #40a070; } /* BaseN */
+code > span.fl { color: #40a070; } /* Float */
+code > span.ch { color: #4070a0; } /* Char */
+code > span.st { color: #4070a0; } /* String */
+code > span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code > span.ot { color: #007020; } /* Other */
+code > span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code > span.fu { color: #06287e; } /* Function */
+code > span.er { color: #ff0000; font-weight: bold; } /* Error */
+code > span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+code > span.cn { color: #880000; } /* Constant */
+code > span.sc { color: #4070a0; } /* SpecialChar */
+code > span.vs { color: #4070a0; } /* VerbatimString */
+code > span.ss { color: #bb6688; } /* SpecialString */
+code > span.im { } /* Import */
+code > span.va { color: #19177c; } /* Variable */
+code > span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code > span.op { color: #666666; } /* Operator */
+code > span.bu { } /* BuiltIn */
+code > span.ex { } /* Extension */
+code > span.pp { color: #bc7a00; } /* Preprocessor */
+code > span.at { color: #7d9029; } /* Attribute */
+code > span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code > span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code > span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+</style>
+
+
+
+<link href="data:text/css;charset=utf-8,body%20%7B%0Abackground%2Dcolor%3A%20%23fff%3B%0Amargin%3A%201em%20auto%3B%0Amax%2Dwidth%3A%20700px%3B%0Aoverflow%3A%20visible%3B%0Apadding%2Dleft%3A%202em%3B%0Apadding%2Dright%3A%202em%3B%0Afont%2Dfamily%3A%20%22Open%20Sans%22%2C%20%22Helvetica%20Neue%22%2C%20Helvetica%2C%20Arial%2C%20sans%2Dserif%3B%0Afont%2Dsize%3A%2014px%3B%0Aline%2Dheight%3A%201%2E35%3B%0A%7D%0A%23header%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0A%23TOC%20%7B%0Aclear%3A%20both%3B%0Amargin%3A%200%200%2010px%2010px%3B%0Apadding%3A%204px%3B%0Awidth%3A%20400px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Aborder%2Dradius%3A%205px%3B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Afont%2Dsize%3A%2013px%3B%0Aline%2Dheight%3A%201%2E3%3B%0A%7D%0A%23TOC%20%2Etoctitle%20%7B%0Afont%2Dweight%3A%20bold%3B%0Afont%2Dsize%3A%2015px%3B%0Amargin%2Dleft%3A%205px%3B%0A%7D%0A%23TOC%20ul%20%7B%0Apadding%2Dleft%3A%2040px%3B%0Amargin%2Dleft%3A%20%2D1%2E5em%3B%0Amargin%2Dtop%3A%205px%3B%0Amargin%2Dbottom%3A%205px%3B%0A%7D%0A%23TOC%20ul%20ul%20%7B%0Amargin%2Dleft%3A%20%2D2em%3B%0A%7D%0A%23TOC%20li%20%7B%0Aline%2Dheight%3A%2016px%3B%0A%7D%0Atable%20%7B%0Amargin%3A%201em%20auto%3B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dcolor%3A%20%23DDDDDD%3B%0Aborder%2Dstyle%3A%20outset%3B%0Aborder%2Dcollapse%3A%20collapse%3B%0A%7D%0Atable%20th%20%7B%0Aborder%2Dwidth%3A%202px%3B%0Apadding%3A%205px%3B%0Aborder%2Dstyle%3A%20inset%3B%0A%7D%0Atable%20td%20%7B%0Aborder%2Dwidth%3A%201px%3B%0Aborder%2Dstyle%3A%20inset%3B%0Aline%2Dheight%3A%2018px%3B%0Apadding%3A%205px%205px%3B%0A%7D%0Atable%2C%20table%20th%2C%20table%20td%20%7B%0Aborder%2Dleft%2Dstyle%3A%20none%3B%0Aborder%2Dright%2Dstyle%3A%20none%3B%0A%7D%0Atable%20thead%2C%20table%20tr%2Eeven%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Ap%20%7B%0Amargin%3A%200%2E5em%200%3B%0A%7D%0Ablockquote%20%7B%0Abackground%2Dcolor%3A%20%23f6f6f6%3B%0Apadding%3A%200%2E25em%200%2E75em%3B%0A%7D%0Ahr%20%7B%0Aborder%2Dstyle%3A%20solid%3B%0Aborder%3A%20none%3B%0Aborder%2Dtop%3A%201px%20solid%20%23777%3B%0Amargin%3A%2028px%200%3B%0A%7D%0Adl%20%7B%0Amargin%2Dleft%3A%200%3B%0A%7D%0Adl%20dd%20%7B%0Amargin%2Dbottom%3A%2013px%3B%0Amargin%2Dleft%3A%2013px%3B%0A%7D%0Adl%20dt%20%7B%0Afont%2Dweight%3A%20bold%3B%0A%7D%0Aul%20%7B%0Amargin%2Dtop%3A%200%3B%0A%7D%0Aul%20li%20%7B%0Alist%2Dstyle%3A%20circle%20outside%3B%0A%7D%0Aul%20ul%20%7B%0Amargin%2Dbottom%3A%200%3B%0A%7D%0Apre%2C%20code%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0Aborder%2Dradius%3A%203px%3B%0Acolor%3A%20%23333%3B%0Awhite%2Dspace%3A%20pre%2Dwrap%3B%20%0A%7D%0Apre%20%7B%0Aborder%2Dradius%3A%203px%3B%0Amargin%3A%205px%200px%2010px%200px%3B%0Apadding%3A%2010px%3B%0A%7D%0Apre%3Anot%28%5Bclass%5D%29%20%7B%0Abackground%2Dcolor%3A%20%23f7f7f7%3B%0A%7D%0Acode%20%7B%0Afont%2Dfamily%3A%20Consolas%2C%20Monaco%2C%20%27Courier%20New%27%2C%20monospace%3B%0Afont%2Dsize%3A%2085%25%3B%0A%7D%0Ap%20%3E%20code%2C%20li%20%3E%20code%20%7B%0Apadding%3A%202px%200px%3B%0A%7D%0Adiv%2Efigure%20%7B%0Atext%2Dalign%3A%20center%3B%0A%7D%0Aimg%20%7B%0Abackground%2Dcolor%3A%20%23FFFFFF%3B%0Apadding%3A%202px%3B%0Aborder%3A%201px%20solid%20%23DDDDDD%3B%0Aborder%2Dradius%3A%203px%3B%0Aborder%3A%201px%20solid%20%23CCCCCC%3B%0Amargin%3A%200%205px%3B%0A%7D%0Ah1%20%7B%0Amargin%2Dtop%3A%200%3B%0Afont%2Dsize%3A%2035px%3B%0Aline%2Dheight%3A%2040px%3B%0A%7D%0Ah2%20%7B%0Aborder%2Dbottom%3A%204px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Apadding%2Dbottom%3A%202px%3B%0Afont%2Dsize%3A%20145%25%3B%0A%7D%0Ah3%20%7B%0Aborder%2Dbottom%3A%202px%20solid%20%23f7f7f7%3B%0Apadding%2Dtop%3A%2010px%3B%0Afont%2Dsize%3A%20120%25%3B%0A%7D%0Ah4%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23f7f7f7%3B%0Amargin%2Dleft%3A%208px%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Ah5%2C%20h6%20%7B%0Aborder%2Dbottom%3A%201px%20solid%20%23ccc%3B%0Afont%2Dsize%3A%20105%25%3B%0A%7D%0Aa%20%7B%0Acolor%3A%20%230033dd%3B%0Atext%2Ddecoration%3A%20none%3B%0A%7D%0Aa%3Ahover%20%7B%0Acolor%3A%20%236666ff%3B%20%7D%0Aa%3Avisited%20%7B%0Acolor%3A%20%23800080%3B%20%7D%0Aa%3Avisited%3Ahover%20%7B%0Acolor%3A%20%23BB00BB%3B%20%7D%0Aa%5Bhref%5E%3D%22http%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0Aa%5Bhref%5E%3D%22https%3A%22%5D%20%7B%0Atext%2Ddecoration%3A%20underline%3B%20%7D%0A%0Acode%20%3E%20span%2Ekw%20%7B%20color%3A%20%23555%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Edt%20%7B%20color%3A%20%23902000%3B%20%7D%20%0Acode%20%3E%20span%2Edv%20%7B%20color%3A%20%2340a070%3B%20%7D%20%0Acode%20%3E%20span%2Ebn%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Efl%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Ech%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Est%20%7B%20color%3A%20%23d14%3B%20%7D%20%0Acode%20%3E%20span%2Eco%20%7B%20color%3A%20%23888888%3B%20font%2Dstyle%3A%20italic%3B%20%7D%20%0Acode%20%3E%20span%2Eot%20%7B%20color%3A%20%23007020%3B%20%7D%20%0Acode%20%3E%20span%2Eal%20%7B%20color%3A%20%23ff0000%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%0Acode%20%3E%20span%2Efu%20%7B%20color%3A%20%23900%3B%20font%2Dweight%3A%20bold%3B%20%7D%20%20code%20%3E%20span%2Eer%20%7B%20color%3A%20%23a61717%3B%20background%2Dcolor%3A%20%23e3d2d2%3B%20%7D%20%0A" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">Tutorial for the implemented penalized approach for anomaly detection</h1>
+<h4 class="author"><em>AMVA4NewPhysics authors</em></h4>
+<h4 class="date"><em>2017-12-22</em></h4>
+
+
+
+<p>In the tutorial, we present how to use package PenalizedAD that contains the implementation of penalized model-based clustering approach and as well the following anomaly detection method.</p>
+<p>First, let us load an example of the background data produced by a mixture of 3 Gaussian components.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">require</span>(PenalizedAD)
+<span class="kw">data</span>(bcg_data)</code></pre></div>
+<p>Given such the data we can use MAES algorithm for model-based clustering to perform classification.</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">f &lt;-<span class="st"> </span><span class="kw">MAES</span>(bcg_data, <span class="dv">2</span>, <span class="kw">attr</span>(bcg_data, <span class="st">&quot;label&quot;</span>))</code></pre></div>
+<p>and plot the classificaion results</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">plot</span>(f[[<span class="dv">8</span>]],<span class="dt">col=</span><span class="kw">attr</span>(bcg_data, <span class="st">&quot;label&quot;</span>),
+     <span class="dt">main=</span><span class="st">&quot;Classification performance&quot;</span>,<span class="dt">ylab=</span><span class="st">&quot;Predicted classes&quot;</span>, <span class="dt">xlab =</span> <span class="st">&quot;Observations&quot;</span>)</code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<!-- For the anomaly detection we make use of the above approach for background density estimation. We can load an example data and fit the anomaly model. -->
+<!-- ```{r} -->
+<!-- data(bcg_data) -->
+<!-- data(experiment_data) -->
+<!-- #1 fit the background for the warm start -->
+<!-- E_bcg=MAES(bcg_data,2,attr(bcg_data, "label")) -->
+<!-- #fit the signal -->
+<!-- #potential model for experimental data if no significant signal components is found -->
+<!-- sig <- E_bcg -->
+<!-- #Iterate between fiting the bacground on data and fitting the signal on data2 -->
+<!-- minbic <- Inf -->
+<!-- n_iter <- 20 -->
+<!-- sig <- signal(E_bcg, experiment_data,sig,gamma_eigen = 1, -->
+<!--             gamma_mean = 4,n_iter,minbic,bcg_data) -->
+<!-- ``` -->
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

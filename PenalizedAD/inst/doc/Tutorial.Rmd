@@ -1,0 +1,58 @@
+---
+title: "Tutorial for the implemented penalized approach for anomaly detection"
+author: "AMVA4NewPhysics authors"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+In the tutorial, we present how to use package PenalizedAD that contains the implementation of penalized model-based clustering approach and as well the following anomaly detection method.
+
+First, let us load an example of the background data produced by a mixture of 3 Gaussian components.
+
+```{r}
+require(PenalizedAD)
+data(bcg_data)
+```
+
+Given such the data we can use MAES algorithm for model-based clustering to perform classification.
+
+```{r}
+f <- MAES(bcg_data, 2, attr(bcg_data, "label"))
+```
+
+and plot the classificaion results
+```{r}
+plot(f[[8]],col=attr(bcg_data, "label"),
+     main="Classification performance",ylab="Predicted classes", xlab = "Observations")
+```
+
+<!-- For the anomaly detection we make use of the above approach for background density estimation. We can load an example data and fit the anomaly model. -->
+<!-- ```{r} -->
+<!-- data(bcg_data) -->
+<!-- data(experiment_data) -->
+
+<!-- #1 fit the background for the warm start -->
+<!-- E_bcg=MAES(bcg_data,2,attr(bcg_data, "label")) -->
+
+<!-- #fit the signal -->
+<!-- #potential model for experimental data if no significant signal components is found -->
+<!-- sig <- E_bcg -->
+
+<!-- #Iterate between fiting the bacground on data and fitting the signal on data2 -->
+<!-- minbic <- Inf -->
+<!-- n_iter <- 20 -->
+<!-- sig <- signal(E_bcg, experiment_data,sig,gamma_eigen = 1, -->
+<!--             gamma_mean = 4,n_iter,minbic,bcg_data) -->
+<!-- ``` -->
+
