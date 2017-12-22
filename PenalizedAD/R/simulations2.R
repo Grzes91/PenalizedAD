@@ -135,6 +135,7 @@ MAES=function(data,J,labs = 0){
 #' @export
 PAD=function(E_best,data_exp,gamma_eigen,gamma_mean,n_iter=20,minbic,data)#allows to find a signal in data_exp set
 {
+  n_iter=20
   minres=E_best
   E_best[[3]] <- list(E_best[[1]],E_best[[2]],E_best[[3]],E_best[[4]])
   n=nrow(data_exp)
@@ -186,6 +187,7 @@ PAD=function(E_best,data_exp,gamma_eigen,gamma_mean,n_iter=20,minbic,data)#allow
   minres[[3]] <- minres[[3]][[3]]
   minres[[7]] <- NULL
   minres[[8]] <- NULL
+  rownames(minres[[1]]) <- c(rep("background",nrow(minres[[1]])-1),"signal")
   names(minres) <- c("means", "eigenvectors","eigenvalues","proportions","gamma2","gamma1")
   return(minres)
 }
